@@ -52,7 +52,7 @@ $ sudo ./install.sh
 ```
 
 ## Tmix/Tmux cheatsheet
-These only applies if using the .tmux.conf file in this repo. These should help once inside a tmux session.
+These only applies if using the .tmux.conf file in this repo. These should help once inside a tmux session. There are many more commands, so if these don't suffice you should be able to find more thorough tmux cheatsheets online.
 
 ### Windows
 ```
