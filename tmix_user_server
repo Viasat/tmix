@@ -1,0 +1,12 @@
+#!/bin/bash
+
+label=${TMUX%%,*}
+label=${label##*/}
+
+if [ "$label" == "default" ]; then
+  label=""
+else
+  label="${label},"
+fi
+
+echo "$(id -un)/${label}"

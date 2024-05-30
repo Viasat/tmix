@@ -1,0 +1,24 @@
+#!/bin/bash
+
+prog="tmix_users"
+
+# Fix any unaligned sessions
+gst=$(tmux show-options -g |grep "$prog")
+for s in $(tmix list-sessions |awk -F: '{print $1}'); do
+    lst=${gst/$prog/$prog $s}
+    sst=$(tmux show-options -t $s |grep "$prog")
+    if [ "$lst" != "$sst" ]; then
+        #tmux set-option -t $s ${lst%% *} ${lst#* }
+        eval tmux set-option -t "$s" "${lst}"
+    fi
+done
+
+# Emit the status for this session
+sess=$1
+if [ "$sess" ]; then
+    stat -c "%U(%n) " $(tmux list-clients -t $sess |awk -F: '{print $1}') \
+        |sed 's#/dev/pts/##' \
+        |xargs echo
+else
+    echo ">>unknown session<<"
+fi
