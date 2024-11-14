@@ -1,5 +1,5 @@
 # tmix
-Pairing and collaboration tool customized for vmamediad01 server. This is wrapper around tmux that lets multiple users join the same tmux session.
+This is a wrapper around tmux that lets multiple users join the same tmux session.
 
 Disclaimer: This is not a polished tool and was ported from a nixos package that ran on a much newer version of tmux. If you discover any issues, please let any of the contributors know so the tool can be improved.
 
@@ -46,7 +46,7 @@ Ctrl-b d
 ```
 
 ## Updating Tmix
-If you have made updates to tmix need to update the copy in vmamediad01's /usr/local/bin, then you just need to run install.sh (need sudo since /usr/local/bin is owned by root)
+If you have made updates to tmix then you can run install.sh to install in /usr/local/bin (need sudo since /usr/local/bin is owned by root)
 ```
 $ sudo ./install.sh
 ```
