@@ -4,10 +4,17 @@ This is a wrapper around tmux that lets multiple users join the same tmux sessio
 Disclaimer: This is not a polished tool and was ported from a nixos package that ran on a much newer version of tmux. If you discover any issues, please let any of the contributors know so the tool can be improved.
 
 ## Setup
-If you don't have a .tmux.conf file you are overly attached to, then please adopt the one in this repo to provide a more standard pairing experience. You will need to copy the .tmux.conf file into your home directory
+If you don't have a tmux.conf file you are overly attached to, then please adopt the one in this repo to provide a more standard pairing experience. To install this in your local user tmux config: 
+
 ```
-$ cp ./.tmux.conf ~/
+$ cp ./tmux.conf ~/.tmux.conf
 ```
+To install it to your system tmux config:
+
+```
+$ sudo cp ./tmux.conf /etc/tmux.conf
+```
+
 ## Creating a new session
 To create a new tmix session with default name:
 ```
@@ -21,26 +28,26 @@ To leave (detach) from the session:
 ```
 Ctrl-a d
 ```
-If this doesn't work, you may be using a different .tmux.conf file and may need to use
+If this doesn't work, you may be using a different tmux.conf file and may need to use
 ```
 Ctrl-b d
 ```
 
 ## Joining an existing session
-For you or others to join an existing tmix session with default name you need to specify the username who created the session followed by a `/`. So if dachee created the session then the command would be:
+For you or others to join an existing tmix session with default name you need to specify the username who created the session followed by a `/`. So if myuser created the session then the command would be:
 ```
-$ tmix dachee/
+$ tmix myuser/
 ```
 or you can specify the tmix sesssion name:
 ```
-$ tmix dachee/mysessionname
+$ tmix myuser/mysessionname
 ```
 
 To leave (detach) from the session:
 ```
 Ctrl-a d
 ```
-If this doesn't work, you may be using a different .tmux.conf file and may need to use
+If this doesn't work, you may be using a different tmux.conf file and may need to use
 ```
 Ctrl-b d
 ```
@@ -52,7 +59,7 @@ $ sudo ./install.sh
 ```
 
 ## Tmix/Tmux cheatsheet
-These only applies if using the .tmux.conf file in this repo. These should help once inside a tmux session. There are many more commands, so if these don't suffice you should be able to find more thorough tmux cheatsheets online.
+These only applies if using the tmux.conf file in this repo. These should help once inside a tmux session. There are many more commands, so if these don't suffice you should be able to find more thorough tmux cheatsheets online.
 
 ### Windows
 ```
