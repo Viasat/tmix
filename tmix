@@ -6,6 +6,7 @@
 """
 selector_path:
     [USER/][SERVER_LABEL,][SESSION:]
+
 USER -> current user
 SERVER_LABEL -> "default"
 SESSION -> according to tmux default rules
@@ -20,40 +21,48 @@ from os.path import *
 def usage():
     print """tmix usage:
     %(prog_name)s [ SELECTOR_PATH ] [ <TMUX_OPTARGS> ]
+
     tmix wraps tmux in order to provide convenient pairing features for teams.
+
     tmix supports the same options/arguments as tmux core, adding only
     a SELECTOR_PATH that (when present) must be the first argument.
+
     SELECTOR_PATH takes this form:
-        [USER/][SERVER_LABEL,][SESSION:]
+        [USER/][SERVER_LABEL,][SESSION[:]]
+
         USER -> current user
         SERVER_LABEL -> "default"
         SESSION -> according to tmux default rules
+
     SELECTOR_PATH defaults to: <username>/default,
+
     Environment Variables
         You may wish to set these to change tmix's behavior.
+
         TMIX_TMUX  : Set this to control which tmux executable is used.
                      (Default: "tmux" in your $PATH)
         TMIX_DEBUG : Set this to see debugging output (including the resulting
                      tmux command). (Default: "")
         TMIX_QUIET : Set this to prevent announcements being made in tmux about
                      your joining the session. (Default: "")
+
     Common use cases:
         # start a new tmix with default SELECTOR_PATH
         %(prog_name)s new
-        # start new tmix with SERVER_LABEL "wocket"
-        # The tmux socket in this case will be ${TMIX_SOCKPATH}/${TMIX_PREFIX}-<username>/wocket.
-        %(prog_name)s moquist/wocket, new
-        # start new tmix with SERVER_LABEL "wocket" and session named "jam"
-        %(prog_name)s moquist/wocket,jam new
+        # start new tmix with SERVER_LABEL "work"
+        # The tmux socket in this case will be ${TMIX_SOCKPATH}/${TMIX_PREFIX}-<username>/work.
+        %(prog_name)s myuser/work, new
+        # start new tmix with SERVER_LABEL "work" and session named "jam"
+        %(prog_name)s myuser/work,jam new
         # start new tmix with SERVER_LABEL named "default" and session named "jam"
-        %(prog_name)s moquist/jam new
-        # join moquist's default tmix session (these are identical)
-        %(prog_name)s moquist/
-        %(prog_name)s moquist/default,
-        # join moquist's "jam" session
-        %(prog_name)s moquist/jam
-        # secretly join moquist's "jam" session
-        TMIX_QUIET=true %(prog_name)s moquist/jam
+        %(prog_name)s myuser/jam new
+        # join myuser's default tmix session (these are identical)
+        %(prog_name)s myuser/
+        %(prog_name)s myuser/default,
+        # join myuser's "jam" session
+        %(prog_name)s myuser/jam
+        # secretly join myuser's "jam" session
+        TMIX_QUIET=true %(prog_name)s myuser/jam
 The following output is from tmux itself, showing its supported options and
     arguments:
     """ % {"prog_name": sys.argv[0]}
