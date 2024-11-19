@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 for c in $(tmux list-clients |awk -F: '{print $1}'); do
-    tmux display-message -c $c "$*"
+    tmux display-message -t $c "$*"
 done
