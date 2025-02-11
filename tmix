@@ -18,7 +18,7 @@ from itertools import *
 from os.path import *
 
 # https://stackoverflow.com/a/11346017
-def get_status(*args, **kwargs):
+def run_with_status(*args, **kwargs):
     p = subprocess.Popen(*args, **kwargs)
     stdout, stderr = p.communicate()
     return p.returncode
@@ -162,10 +162,12 @@ if user == me:
         os.mkdir(tpath_dir)
     os.chmod(tpath_dir, 0o755)
     # NOOP to test if server is running (presumably with properly ACL'd socket.
-    status = get_status([tmix_tmux] + final_opt_list + [ 'display -p ""' ])
+    status = run_with_status([tmix_tmux] + final_opt_list + [ 'display -p ""' ])
     if not 0 == status:
         if tmix_debug: print("Setting ACLs")
-        acl_cmd = ['start-server', ';', 'run', 'setfacl -m %(tmix_acls)s %(tpath)s' % locals(), ';']
+        acl_cmd = ['start-server', ';', 'run', f"setfacl -m {tmix_acls} {tpath}", ';']
+else:
+    run_with_status(["sudo", tmix_tmux, '-S', tpath, "server-access", "-a", me, ';'])
 
 cmdline =  [tmix_tmux] + final_opt_list
 cmdline += acl_cmd
