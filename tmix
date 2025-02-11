@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # Copyright (c) 2012, Viasat, Inc
 # Licensed under EPL 2.0
@@ -15,12 +15,19 @@ SESSION -> according to tmux default rules
 import os, sys, string, grp, pwd, time, subprocess, re
 from getopt import *
 from itertools import *
-from commands import *
 from os.path import *
 
+# https://stackoverflow.com/a/11346017
+def get_status(*args, **kwargs):
+    p = subprocess.Popen(*args, **kwargs)
+    stdout, stderr = p.communicate()
+    return p.returncode
+
+
 def usage():
-    print """tmix usage:
-    %(prog_name)s [ SELECTOR_PATH ] [ <TMUX_OPTARGS> ]
+    prog_name = sys.argv[0]
+    print(f"""tmix usage:
+    {prog_name} [ SELECTOR_PATH ] [ <TMUX_OPTARGS> ]
 
     tmix wraps tmux in order to provide convenient pairing features for teams.
 
@@ -48,24 +55,24 @@ def usage():
 
     Common use cases:
         # start a new tmix with default SELECTOR_PATH
-        %(prog_name)s new
+        {prog_name} new
         # start new tmix with SERVER_LABEL "work"
-        # The tmux socket in this case will be ${TMIX_SOCKPATH}/${TMIX_PREFIX}-<username>/work.
-        %(prog_name)s myuser/work, new
+        # The tmux socket in this case will be ${{TMIX_SOCKPATH}}/${{TMIX_PREFIX}}-<username>/work.
+        {prog_name} myuser/work, new
         # start new tmix with SERVER_LABEL "work" and session named "jam"
-        %(prog_name)s myuser/work,jam new
+        {prog_name} myuser/work,jam new
         # start new tmix with SERVER_LABEL named "default" and session named "jam"
-        %(prog_name)s myuser/jam new
+        {prog_name} myuser/jam new
         # join myuser's default tmix session (these are identical)
-        %(prog_name)s myuser/
-        %(prog_name)s myuser/default,
+        {prog_name} myuser/
+        {prog_name} myuser/default,
         # join myuser's "jam" session
-        %(prog_name)s myuser/jam
+        {prog_name} myuser/jam
         # secretly join myuser's "jam" session
-        TMIX_QUIET=true %(prog_name)s myuser/jam
+        TMIX_QUIET=true {prog_name} myuser/jam
 The following output is from tmux itself, showing its supported options and
     arguments:
-    """ % {"prog_name": sys.argv[0]}
+    """)
     os.execvp(tmix_tmux, [tmix_tmux, "--help"])
 
 tmix_sockpath = os.getenv('TMIX_SOCKPATH','/tmp')
@@ -81,7 +88,7 @@ tmix_path = dirname(abspath(sys.argv[0]))
 
 def output_opts(opt_dict, opt_flags):
     l = []
-    for k, v in opt_dict.iteritems():
+    for k, v in opt_dict.items():
         l.append(k)
         if k not in opt_flags:
             l.append(v)
@@ -117,10 +124,10 @@ if arglist:
 else:
     sel = ''
 
-if opt_dict.has_key('-S'):
+if '-S' in opt_dict:
     raise Exception("Cannot override tmix -S option.")
 
-if opt_dict.has_key('-L'):
+if '-L' in opt_dict:
     label = opt_dict['-L']
     del opt_dict['-L']
 
@@ -153,11 +160,11 @@ acl_cmd = []
 if user == me:
     if not os.access(tpath_dir, os.F_OK):
         os.mkdir(tpath_dir)
-    os.chmod(tpath_dir, 0755)
+    os.chmod(tpath_dir, 0o755)
     # NOOP to test if server is running (presumably with properly ACL'd socket.
-    status, out = getstatusoutput(' '.join([tmix_tmux] + final_opt_list) + 'display -p ""')
+    status = get_status([tmix_tmux] + final_opt_list + [ 'display -p ""' ])
     if not 0 == status:
-        if tmix_debug: print "Setting ACLs"
+        if tmix_debug: print("Setting ACLs")
         acl_cmd = ['start-server', ';', 'run', 'setfacl -m %(tmix_acls)s %(tpath)s' % locals(), ';']
 
 cmdline =  [tmix_tmux] + final_opt_list
@@ -167,5 +174,5 @@ cmdline += tmux_cmds
 if not tmix_quiet:
     cmdline += [';', 'run', '%s/tmix_broadcast %s' % (tmix_path, me + " joined")]
 
-if tmix_debug: print "cmdline", cmdline
+if tmix_debug: print("cmdline", cmdline)
 os.execvp(tmix_tmux, cmdline)
